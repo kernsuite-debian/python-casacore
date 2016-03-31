@@ -1,0 +1,41 @@
+python-casacore (2.1.2-0trusty) trusty; urgency=medium
+
+  * New upstream release
+
+ -- Gijs Molenaar (launchpad ppa build key) <gijs@pythonic.nl>  Thu, 31 Mar 2016 13:45:47 +0200
+
+python-casacore (2.1.1-0trusty) trusty; urgency=medium
+
+  * new upstream release
+  
+ -- Gijs Molenaar (launchpad ppa build key) <gijs@pythonic.nl>  Thu, 31 Mar 2016 12:21:14 +0200
+
+python-casacore (2.0.0-4trusty) trusty; urgency=medium
+
+  * Conflict with pyrap, not replace
+
+ -- Gijs Molenaar (launchpad ppa build key) <gijs@pythonic.nl>  Thu, 20 Aug 2015 10:58:53 +0200
+
+python-casacore (2.0.0-3vivid) vivid; urgency=medium
+
+  * new casacore with new ABI, requires recompile
+
+ -- Gijs Molenaar (launchpad ppa build key) <gijs@pythonic.nl>  Wed, 29 Jul 2015 12:29:32 +0200
+
+python-casacore (2.0.0-2trusty) trusty; urgency=medium
+
+  * add Replaces old python-pyrap package
+
+ -- Gijs Molenaar (launchpad ppa build key) <gijs@pythonic.nl>  Tue, 14 Jul 2015 16:06:15 +0200
+
+python-casacore (2.0.0-1trusty) trusty; urgency=medium
+
+  * new upstream release
+
+ -- Gijs Molenaar (launchpad ppa build key) <gijs@pythonic.nl>  Fri, 10 Apr 2015 12:27:08 +0200
+
+python-casacore (0.1-1trusty) trusty; urgency=low
+
+  * Initial release
+
+ -- Gijs Molenaar (launchpad ppa build key) <gijs@pythonic.nl>  Tue, 11 Nov 2014 12:35:59 +0200
