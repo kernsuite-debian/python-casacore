@@ -2,12 +2,12 @@
 # -*- makefile -*-
 #
 export DH_VERBOSE=1
-
-export PYBUILD_NAME = python-casacore
-
-# we need to set the permissive flag
-CFLAGS=-g -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -fpermissive
+export PYBUILD_NAME = casacore
 
 %:
-	dh $@ --with python2 --buildsystem=pybuild
+	dh $@ --with python2,python3 --buildsystem=pybuild  --parallel
 
+
+override_dh_clean:
+	dh_clean
+	rm -rf python_casacore.egg-info
