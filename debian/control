@@ -1,27 +1,55 @@
 Source: python-casacore
 Section: python
 Priority: extra
-Maintainer: Gijs Molenaar <gijs@pythonic.nl>
-Build-Depends: debhelper (>= 9), python-dev, casacore-dev, dh-python,
- python-all (>= 2.6.6-3~), python-setuptools, python-setuptools,
- libboost-python-dev, libcfitsio3-dev, python3-setuptools, python3-dev,
- python3-all, libcasa-python3-2, python-numpy, python3-numpy, wcslib-dev
-Standards-Version: 3.9.2
+Maintainer: Debian Astro Team <debian-astro-maintainers@lists.alioth.debian.org>
+Uploaders: Gijs Molenaar <gijs@pythonic.nl>,
+           Ole Streicher <olebole@debian.org>
+Build-Depends: casacore-dev,
+               debhelper (>= 9),
+               dh-python,
+               libboost-python-dev,
+               libcasa-python3-2,
+               libcfitsio3-dev,
+               python-all (>= 2.6.6-3~),
+               python-dev,
+               python-numpy,
+               python-setuptools,
+               python3-all,
+               python3-dev,
+               python3-numpy,
+               python3-setuptools,
+               wcslib-dev
+Standards-Version: 3.9.8
 Homepage: https://github.com/casacore/python-casacore
+Vcs-Git: https://anonscm.debian.org/git/debian-astro/packages/python-casacore.git
+Vcs-Browser: https://anonscm.debian.org/cgit/debian-astro/packages/python-casacore.git
 X-Python-Version: >= 2.6
 X-Python3-Version: >= 3.4
 
 Package: python-casacore
 Architecture: any
 Provides: ${python:Provides}
-Depends: ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}, python-numpy
-Conflicts: python-pyrap
-Description: python wrapper for casacore
+Depends: python-numpy,
+         ${misc:Depends},
+         ${python:Depends},
+         ${shlibs:Depends}
+Description: Python 2 bindings to the casacore library
+ The casacore package contains the core libraries of the old AIPS++/CASA
+ package. This split was made to get a better separation of core
+ libraries and applications. CASA is now built on top of casacore.
+ .
+ This is the Python 2 wrapper around the library.
 
 Package: python3-casacore
 Architecture: any
 Provides: ${python3:Provides}
-Depends: ${python3:Depends}, ${misc:Depends}, ${shlibs:Depends}, python3-numpy
-Conflicts: python-pyrap
-Description: python3 wrapper for casacore
-
+Depends: python3-numpy,
+         ${misc:Depends},
+         ${python3:Depends},
+         ${shlibs:Depends}
+Description: Python 3 bindings to the casacore library
+ The casacore package contains the core libraries of the old AIPS++/CASA
+ package. This split was made to get a better separation of core
+ libraries and applications. CASA is now built on top of casacore.
+ .
+ This is the Python 3 wrapper around the library.
