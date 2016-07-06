@@ -1,0 +1,118 @@
+From: Ole Streicher <olebole@debian.org>
+Date: Wed, 6 Jul 2016 14:04:52 +0200
+Subject: Use system python_six package
+
+---
+ casacore/fitting/fitting.py       | 2 +-
+ casacore/images/coordinates.py    | 2 +-
+ casacore/images/image.py          | 2 +-
+ casacore/tables/msutil.py         | 2 +-
+ casacore/tables/table.py          | 2 +-
+ casacore/tables/tablehelper.py    | 2 +-
+ casacore/tables/tableutil.py      | 2 +-
+ casacore/tables/wxtablebrowser.py | 2 +-
+ 8 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/casacore/fitting/fitting.py b/casacore/fitting/fitting.py
+index 402fd40..69061ed 100644
+--- a/casacore/fitting/fitting.py
++++ b/casacore/fitting/fitting.py
+@@ -1,6 +1,6 @@
+ from ._fitting import fitting
+ from casacore.functionals import *
+-from casacore import six
++import six
+ import numpy as NUM
+ 
+ class fitserver(object):
+diff --git a/casacore/images/coordinates.py b/casacore/images/coordinates.py
+index ed4c5b8..ee459a7 100644
+--- a/casacore/images/coordinates.py
++++ b/casacore/images/coordinates.py
+@@ -27,7 +27,7 @@
+ 
+ import string
+ import numpy
+-from casacore import six
++import six
+ 
+ 
+ class coordinatesystem(object):
+diff --git a/casacore/images/image.py b/casacore/images/image.py
+index 7921150..4163333 100644
+--- a/casacore/images/image.py
++++ b/casacore/images/image.py
+@@ -34,7 +34,7 @@ except ImportError:
+     import numpy.core.ma as nma
+ 
+ from casacore.images.coordinates import coordinatesystem
+-from casacore import six
++import six
+ 
+ 
+ class image(Image):
+diff --git a/casacore/tables/msutil.py b/casacore/tables/msutil.py
+index be30ac5..54e0754 100644
+--- a/casacore/tables/msutil.py
++++ b/casacore/tables/msutil.py
+@@ -29,7 +29,7 @@ import numpy as np
+ from casacore.tables.table import table, taql
+ from casacore.tables.tableutil import makescacoldesc, makearrcoldesc,\
+     makecoldesc, maketabdesc
+-from casacore import six
++import six
+ 
+ 
+ 
+diff --git a/casacore/tables/table.py b/casacore/tables/table.py
+index ed6b7b3..a78a093 100755
+--- a/casacore/tables/table.py
++++ b/casacore/tables/table.py
+@@ -43,7 +43,7 @@ Several utility functions exist. Important ones are:
+ # Make interface to class TableProxy available.
+ from ._tables import Table
+ from .tablehelper import _add_prefix, _remove_prefix, _do_remove_prefix
+-from casacore import six
++import six
+ 
+ # Execute a TaQL command on a table.
+ def taql (command, style='Python', tables=[], globals={}, locals={}):
+diff --git a/casacore/tables/tablehelper.py b/casacore/tables/tablehelper.py
+index 17d861b..6e05e04 100644
+--- a/casacore/tables/tablehelper.py
++++ b/casacore/tables/tablehelper.py
+@@ -25,7 +25,7 @@
+ #
+ # $Id: tableutil.py,v 1.6 2006/11/08 00:12:55 gvandiep Exp $
+ 
+-from casacore.six import PY2
++from six import PY2
+ 
+ 
+ # A keywordset in a table can hold tables, but it is not possible to
+diff --git a/casacore/tables/tableutil.py b/casacore/tables/tableutil.py
+index dc83c6f..c13b538 100755
+--- a/casacore/tables/tableutil.py
++++ b/casacore/tables/tableutil.py
+@@ -27,7 +27,7 @@
+ 
+ from .table import table
+ from .tablehelper import _remove_prefix, _value_type_name
+-from casacore import six
++import six
+ 
+ 
+ def tablefromascii (tablename, asciifile,
+diff --git a/casacore/tables/wxtablebrowser.py b/casacore/tables/wxtablebrowser.py
+index cae31a3..1137cfe 100755
+--- a/casacore/tables/wxtablebrowser.py
++++ b/casacore/tables/wxtablebrowser.py
+@@ -1,7 +1,7 @@
+ from wxPython.wx import *
+ from wxPython.grid import *
+ 
+-from casacore import six
++import six
+ 
+ 
+ class wxCasaTable(wxPyGridTableBase):

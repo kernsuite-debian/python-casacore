@@ -2,8 +2,7 @@ Source: python-casacore
 Section: python
 Priority: extra
 Maintainer: Debian Astro Team <debian-astro-maintainers@lists.alioth.debian.org>
-Uploaders: Gijs Molenaar <gijs@pythonic.nl>,
-           Ole Streicher <olebole@debian.org>
+Uploaders: Gijs Molenaar <gijs@pythonic.nl>, Ole Streicher <olebole@debian.org>
 Build-Depends: casacore-dev,
                debhelper (>= 9),
                dh-python,
@@ -14,10 +13,12 @@ Build-Depends: casacore-dev,
                python-dev,
                python-numpy,
                python-setuptools,
+               python-six,
                python3-all,
                python3-dev,
                python3-numpy,
                python3-setuptools,
+               python3-six,
                wcslib-dev
 Standards-Version: 3.9.8
 Homepage: https://github.com/casacore/python-casacore
@@ -30,6 +31,7 @@ Package: python-casacore
 Architecture: any
 Provides: ${python:Provides}
 Depends: python-numpy,
+         python-six,
          ${misc:Depends},
          ${python:Depends},
          ${shlibs:Depends}
@@ -44,6 +46,7 @@ Package: python3-casacore
 Architecture: any
 Provides: ${python3:Provides}
 Depends: python3-numpy,
+         python3-six,
          ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends}
