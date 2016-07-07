@@ -1,4 +1,4 @@
-python-casacore (2.1.2-1) UNRELEASED; urgency=low
+python-casacore (2.1.2-1) unstable; urgency=low
 
   * Initial version. Closes: #830118
 
