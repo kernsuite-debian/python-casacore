@@ -1,3 +1,9 @@
+python-casacore (2.1.2-2) unstable; urgency=medium
+
+  * Add debian/upstream/metadata with bug db and repository
+
+ -- Ole Streicher <olebole@debian.org>  Mon, 26 Sep 2016 10:58:45 +0200
+
 python-casacore (2.1.2-1) unstable; urgency=low
 
   * Initial version. Closes: #830118
