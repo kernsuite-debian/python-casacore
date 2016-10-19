@@ -1,3 +1,9 @@
+python-casacore (2.1.2-3) unstable; urgency=low
+
+  * Use libcfitsio-dev dependency. Closes: #841216
+
+ -- Ole Streicher <olebole@debian.org>  Wed, 19 Oct 2016 09:23:00 +0200
+
 python-casacore (2.1.2-2) unstable; urgency=medium
 
   * Add debian/upstream/metadata with bug db and repository
