@@ -1,3 +1,9 @@
+python-casacore (2.1.2-3kern1) xenial; urgency=medium
+
+  * rebuild against casacore 2.2.0
+
+ -- Gijs Molenaar (launchpad ppa build key) <gijs@pythonic.nl>  Thu, 02 Feb 2017 12:22:22 +0000
+
 python-casacore (2.1.2-3) unstable; urgency=low
 
   * Use libcfitsio-dev dependency. Closes: #841216
