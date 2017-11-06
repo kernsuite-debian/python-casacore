@@ -31,7 +31,7 @@ A `casacore table <../../casacore/doc/html/group__Tables__module.html>`_
 is similar to a relational data base table with the extension
 that table cells can contain n-dimensional arrays.
 It has a rich SQL-like query language
-(`TaQL <../../casacore/doc/notes/199.html>`_).
+(`TaQL <../../doc/199.html>`_).
 
 A table consists of numbered rows and named columns. A column can hold
 scalar values or arrays of any dimensionality and shape. Furthermore the
@@ -57,12 +57,14 @@ submodule `msutil <#measurementset-utility-functions>`_
 
 """
 
+from .msutil import *
 from .table import table
+from .table import default_ms
+from .table import default_ms_subtable
 from .table import tablecommand
 from .table import taql
-from .tableiter import tableiter
-from .tableindex import tableindex
 from .tablecolumn import tablecolumn
+from .tableindex import tableindex
+from .tableiter import tableiter
 from .tablerow import tablerow
 from .tableutil import *
-from .msutil import *

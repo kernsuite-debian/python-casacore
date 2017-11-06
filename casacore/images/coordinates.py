@@ -25,28 +25,32 @@
 #
 # $Id$
 
-import string
-import numpy
 from casacore import six
 
 
 class coordinatesystem(object):
     """
-    A thin wrapper for casacore coordinate systems. It dissects the 
+    A thin wrapper for casacore coordinate systems. It dissects the
     coordinatesystem record returned from casacore images.
     This only handles one instance of each coordinate type.
     The possible types are ''direction'', ''spectral'', ''stokes'',
     ''linear'' and ''tabular''.
+     The first, second, trird and fourth axis are respectively,
+     'Right Ascension','Declination','Stokes' and 'Frequency'.
+     To make a coordinate object, these things should be taken care
+     of.Like to make a spectral coordinate, a 4D image should be used
+     as the 4th axis is 'Frequency' and so on.
 
     It uses reference semantics for the individual coordinates,
     e.g. the following will work::
-    
+
       cs = im.coordinates()
       cs["direction"].set_referencepixel([0.0,0.0])
       # or equivalent
       cs.get_coordinates("direction").set_referencepixel([0.0,0.0])
 
     """
+
     def __init__(self, rec):
         self._csys = rec
         self._names = []
@@ -75,10 +79,10 @@ class coordinatesystem(object):
                 if key.startswith(name):
                     idx = int(key[len(name):])
                     self._names[idx] = name
-                    n +=1
+                    n += 1
         # reverse as we are c order in python
         self._names = self._names[:n][::-1]
-        
+
         if len(self._names) == 0:
             raise LookupError("Coordinate record doesn't contain valid coordinates")
 
@@ -90,7 +94,7 @@ class coordinatesystem(object):
     def __getitem__(self, name):
         # reverse index back to fortran order as the record is using this
         i = self._names[::-1].index(name)
-        return eval("%scoordinate(self._csys['%s'])" % (name, name+str(i)))
+        return eval("%scoordinate(self._csys['%s'])" % (name, name + str(i)))
 
     # alias
     get_coordinate = __getitem__
@@ -99,9 +103,9 @@ class coordinatesystem(object):
         # reverse index back to fortran order as the record is using this
         i = self._names[::-1].index(name)
         assert isinstance(val, eval("%scoordinate" % name))
-        self._csys[key+str(i)] = val._coord
+        self._csys[name + str(i)] = val._coord
 
-    # alias        
+    # alias
     set_coordinate = __setitem__
 
     def __iter__(self):
@@ -112,10 +116,10 @@ class coordinatesystem(object):
         return self._csys.get("obsdate", None)
 
     def get_observer(self):
-       return self._csys.get("observer", None)
+        return self._csys.get("observer", None)
 
     def get_telescope(self):
-       return self._csys.get("telescope", None)
+        return self._csys.get("telescope", None)
 
     def get_referencepixel(self):
         return [coord.get_referencepixel() for coord in self]
@@ -148,6 +152,7 @@ class coordinatesystem(object):
 class coordinate(object):
     """Overwrite as neccessary
     """
+
     def __init__(self, rec):
         self._coord = rec
         self._template = " %-16s: %s\n"
@@ -155,19 +160,19 @@ class coordinate(object):
     def __str__(self):
         lname = self.__class__.__name__.capitalize()
         out = "%s Coordinate:\n" % lname[:-10]
-        out += self._template % ("Reference Pixel", 
+        out += self._template % ("Reference Pixel",
                                  str(self.get_referencepixel()))
         out += self._template % ("Reference Value",
                                  str(self.get_referencevalue()) \
-                                     + " " + str(self.get_unit()))
+                                 + " " + str(self.get_unit()))
         out += self._template % ("Increment",
                                  str(self.get_increment()) \
-                                     + " " + str(self.get_unit()))
+                                 + " " + str(self.get_unit()))
         return out
 
     def dict(self):
         """Get the coordinate info as a dict"""
-        return self._coord;
+        return self._coord
 
     def get_axis_size(self, axis=0):
         """Get the length of the given axis in this coordinate
@@ -189,33 +194,42 @@ class coordinate(object):
         except:
             return -1
 
-     # ALL list/array values have to be reversed as the coordsys dict holds 
+    # ALL list/array values have to be reversed as the coordsys dict holds
+
     # everything in fortran order.
 
     def get_referencepixel(self):
+        """Get the reference pixel of the given axis in this coordinate."""
         return self._coord.get("crpix", [])[::-1]
 
     def set_referencepixel(self, pix):
+        """Set the reference pixel of the given axis in this coordinate."""
         assert len(pix) == len(self._coord["crpix"])
         self._coord["crpix"] = pix[::-1]
 
     def get_referencevalue(self):
+        """Get the reference value of the given axis in this coordinate."""
         return self._coord.get("crval", [])[::-1]
 
     def set_referencevalue(self, val):
+        """Set the reference pixel of the given axis in this coordinate."""
         assert len(val) == len(self._coord["crval"])
         self._coord["crval"] = val[::-1]
 
     def get_increment(self):
+        """Get the increment of the given axis in this coordinate."""
         return self._coord.get("cdelt", [])[::-1]
 
     def set_increment(self, inc):
+        """Set the increment of the given axis in this coordinate."""
         self._coord["cdelt"] = inc[::-1]
-    
+
     def get_unit(self):
+        """Get the unit of the given axis in this coordinate."""
         return self._coord.get("units", [])[::-1]
 
     def get_axes(self):
+        """Get the axes in this coordinate."""
         return self._coord.get("axes", [])[::-1]
 
 
@@ -230,21 +244,25 @@ class directioncoordinate(coordinate):
         return out
 
     def get_projection(self):
+        """Get the projection of the given axis in this coordinate."""
         return self._coord.get("projection", None)
 
     def set_projection(self, val):
-        knownproj = ["SIN", "ZEA", "TAN", "NCP", "AIT", "ZEA"] # etc
+        """Set the projection of the given axis in this coordinate.
+
+        The known projections are SIN, ZEA, TAN, NCP, AIT, ZEA
+        """
+        knownproj = ["SIN", "ZEA", "TAN", "NCP", "AIT", "ZEA"]  # etc
         assert val.upper() in knownproj
         self._coord["projection"] = val.upper()
 
-
     def get_frame(self):
-       return self._coord.get("system", None)
+        return self._coord.get("system", None)
 
     def set_frame(self, val):
         # maybe uses measures here
-        #dm = measures();knonwframes = dm.list_codes(dm.direction())["normal"]
-        knownframes = ["GALACTIC", "J2000", "B1950", "SUPERGAL"] # etc
+        # dm = measures();knonwframes = dm.list_codes(dm.direction())["normal"]
+        knownframes = ["GALACTIC", "J2000", "B1950", "SUPERGAL"]  # etc
         assert val.upper() in knownframes
         self._coord["system"] = val.upper()
 
@@ -256,10 +274,10 @@ class spectralcoordinate(coordinate):
     def __str__(self):
         out = coordinate.__str__(self)
         out += self._template % ("Frame", str(self.get_frame()))
-        out += self._template % ("Rest Frequency", 
+        out += self._template % ("Rest Frequency",
                                  str(self.get_restfrequency()) + " Hz")
         return out
-    
+
     def get_unit(self):
         return self._coord.get("unit", None)
 
@@ -287,13 +305,16 @@ class spectralcoordinate(coordinate):
     def get_restfrequency(self):
         return self._coord.get("restfreq", None)
 
+    def set_restfrequency(self, val):
+        self._coord["restfreq"] = val
+
     def get_frame(self):
-       return self._coord.get("system", None)
+        return self._coord.get("system", None)
 
     def set_frame(self, val):
         # maybe uses measures here
-        #dm = measures();knonwframes = dm.list_codes(dm.frequency())["normal"]
-        knownframes = ["BARY", "LSRK", "TOPO"] 
+        # dm = measures();knonwframes = dm.list_codes(dm.frequency())["normal"]
+        knownframes = ["BARY", "LSRK", "TOPO"]
         assert val.upper() in knownframes
         self._coord["system"] = val.upper()
 
@@ -301,12 +322,14 @@ class spectralcoordinate(coordinate):
         return self._coord.get("conversion", None)
 
     def set_conversion(self, key, val):
-        assert self._coord.has_key(key)
+        assert key in self._coord
         self._coord["conversion"][key] = val
+
 
 class linearcoordinate(coordinate):
     def __init__(self, rec):
         coordinate.__init__(self, rec)
+
 
 class stokescoordinate(coordinate):
     def __init__(self, rec):
@@ -314,6 +337,7 @@ class stokescoordinate(coordinate):
 
     def get_stokes(self):
         return self._coord["stokes"]
+
 
 class tabularcoordinate(coordinate):
     def __init__(self, rec):
@@ -332,4 +356,3 @@ class tabularcoordinate(coordinate):
     def set_worldvalues(self, val):
         assert len(val) == len(self._coord["worldvalues"])
         self._coord["worldvalues"] = val
-

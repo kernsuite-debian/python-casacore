@@ -1,36 +1,55 @@
 language: python
 sudo: required
 dist: trusty
-python:
- - 2.6
- - 2.7
-env:
- - CASACORE=20
- - CASACORE=21
+
 matrix:
- include:
-  # TODO: https://github.com/casacore/python-casacore/issues/54
-  #- os: osx
-  #  language: generic
-  #  env: CASACORE=21
-  #  python: 3.5
-  - os: linux
-    language: python
-    env: CASACORE=21
-    python: 3.4
-  # TODO: https://github.com/casacore/python-casacore/issues/59
-  #- os: linux
-  #  language: python
-  #  env: CASACORE=21
-  #  python: 3.5
+    include:
+        - os: linux
+          python: "2.7"
+
+        - os: linux
+          python: "3.5"
+
+        - os: linux
+          python: "3.6"
+
+        # Use generic language for osx
+        - os: osx
+          language: generic
+          python: "2.7"
+          env: TRAVIS_PYTHON_VERSION=2.7
+
+        - os: osx
+          language: generic
+          python: "3.5"
+          env: TRAVIS_PYTHON_VERSION=3.5
+
+        - os: osx
+          language: generic
+          python: "3.6"
+          env: TRAVIS_PYTHON_VERSION=3.6
+
+    allow_failures:
+    - os: osx
+
 
 before_install:
  - .travis/before_install.sh
+ - mkdir $HOME/data
+ - echo $PWD
+ - cd $HOME/data && wget ftp://ftp.astron.nl/outgoing/Measures/WSRT_Measures.ztar && tar xf WSRT_Measures.ztar && cd -
+ - echo $PWD
 install:
- - pip install -r test_requirements.txt
- - pip install -e .
+ - export PATH="$HOME/miniconda/bin:$PATH"
+ - source activate testenv
+ - export CPATH="$HOME/miniconda/envs/testenv/include:$CPATH"
+ - echo $CPATH
+ - python setup.py develop
+ - pip install -r tests/requirements.txt
+ - pip install coveralls travis-sphinx
 script:
- - nosetests
+ - nosetests --with-coverage
+ - travis-sphinx --nowarn -s doc build
 deploy:
  provider: pypi
  user: gijzelaerr
@@ -39,8 +58,9 @@ deploy:
  on:
   tags: true
   repo: casacore/python-casacore
+after_success:
+  coveralls
 notifications:
   webhooks:
    urls:
     - https://webhooks.gitter.im/e/08a570c12a3afa37d8e2
-
