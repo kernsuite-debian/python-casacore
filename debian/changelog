@@ -1,3 +1,11 @@
+python-casacore (2.2.0-1kern1) xenial; urgency=medium
+
+  * add debian clean file
+  * Imported Upstream version 2.2.0
+  * Disable six patch for now
+
+ -- KERN packaging <packaging@kernsuite.info>  Mon, 06 Nov 2017 18:28:32 +0200
+
 python-casacore (2.1.2-3kern1) xenial; urgency=medium
 
   * rebuild against casacore 2.2.0
