@@ -1,3 +1,10 @@
+python-casacore (3.0.0-1) bionic; urgency=medium
+
+  [ Gijs Molenaar ]
+  * New upstream version 3.0.0
+
+ -- KERN packaging <packaging@kernsuite.info>  Tue, 08 Jan 2019 10:24:35 +0200
+
 python-casacore (2.2.1-1) xenial; urgency=medium
 
   * Imported Upstream version 2.2.1
