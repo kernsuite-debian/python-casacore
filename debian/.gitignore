@@ -1,0 +1,7 @@
+.debhelper/
+files
+*.log
+*.debhelper
+*.substvars
+python-casacore/
+python3-casacore/

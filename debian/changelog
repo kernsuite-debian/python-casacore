@@ -1,3 +1,9 @@
+python-casacore (3.0.0-1kern1) bionic; urgency=medium
+
+  * Force casacore 3.0
+
+ -- KERN packaging <packaging@kernsuite.info>  Fri, 26 Apr 2019 14:08:23 +0200
+
 python-casacore (3.0.0-1) bionic; urgency=medium
 
   [ Gijs Molenaar ]
