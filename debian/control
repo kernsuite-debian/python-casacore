@@ -3,11 +3,10 @@ Section: python
 Priority: optional
 Maintainer: Debian Astro Team <debian-astro-maintainers@lists.alioth.debian.org>
 Uploaders: Gijs Molenaar <gijs@pythonic.nl>, Ole Streicher <olebole@debian.org>
-Build-Depends: casacore-dev,
+Build-Depends: casacore-dev (>= 3.0.0),
                debhelper (>= 9),
                dh-python,
                libboost-python-dev,
-               libcasa-python3-2,
                libcfitsio-dev | libcfitsio3-dev,
                python-all (>= 2.6.6-3~),
                python-dev,
