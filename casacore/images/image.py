@@ -22,21 +22,14 @@
 #                        National Radio Astronomy Observatory
 #                        520 Edgemont Road
 #                        Charlottesville, VA 22903-2475 USA
-#
-# $Id$
 
-# Make interface to class ImageProxy available.
+
+from six import string_types, integer_types
 from ._images import Image
-
 import numpy
-
-try:
-    import numpy.ma as nma
-except ImportError:
-    import numpy.core.ma as nma
-
+import numpy.ma as nma
 from casacore.images.coordinates import coordinatesystem
-from casacore import six
+import six
 
 
 class image(Image):
@@ -99,7 +92,11 @@ class image(Image):
       | An optional mask to be stored in the image when creating the image.
         If a mask is given, but no maskname is given, the mask will get the
         name `mask0`.
-      | Note that the mask can also be given in argument `values` (see above).
+      | The mask can also be given in argument `values` (see above).
+      | Note that the casacore images use the convention that a mask value
+        True means good and False means bad. However, numpy uses the opposite.
+        Therefore the mask will be negated, so a numpy masked can be given
+        directly.
     `shape`
       If given, the image will be created. If `values` is also given, its
       shape should match. If `values` is not given, an image with data type
@@ -131,7 +128,7 @@ class image(Image):
             if isinstance(imagename, tuple) or isinstance(imagename, list):
                 if len(imagename) == 0:
                     raise ValueError('No images given in list or tuple')
-                if isinstance(imagename[0], str):
+                if isinstance(imagename[0], string_types):
                     # Concatenate from image names
                     Image.__init__(self, imagename, axis)
                     opened = True
@@ -140,7 +137,7 @@ class image(Image):
                     Image.__init__(self, imagename, axis, 0, 0)
                     opened = True
             if not opened:
-                if not isinstance(imagename, str):
+                if not isinstance(imagename, string_types):
                     raise ValueError("first argument must be name or" +
                                      " sequence of images or names")
                 if shape is None:
@@ -169,7 +166,7 @@ class image(Image):
                                 mask = nma.getmaskarray(values)
                             values = values.data
                         if len(mask) > 0:
-                            mask = -mask  # casa and numpy have opposite flags
+                            mask = ~mask  # casa and numpy have opposite flags
                         Image.__init__(self, values, mask, coord,
                                        imagename, overwrite, ashdf5,
                                        maskname, tileshape)
@@ -262,7 +259,7 @@ class image(Image):
         It can only be used for unique attribute keys. An IndexError exception
         is raised if no or multiple matches are found.
         """
-        if not isinstance(key, str):
+        if not isinstance(key, string_types):
             return self._attrgetrow(groupname, key)
         # The key is an attribute name whose value has to be found.
         rownrs = self.attrfindrows(groupname, key, value)
@@ -362,7 +359,7 @@ class image(Image):
         as the dimensionality of the image.
         Note that the casacore images use the convention that a mask value
         True means good and False means bad. However, numpy uses the opposite.
-        Therefore the mask will be negated, so a numoy masked can be given
+        Therefore the mask will be negated, so a numpy masked can be given
         directly.
 
         The mask is not written if the image has no mask and if it the entire
@@ -613,7 +610,7 @@ class image(Image):
 
     def _adaptAxes(self, axes):
         # If axes is a single integer value, turn it into a list.
-        if isinstance(axes, int):
+        if isinstance(axes, integer_types):
             axes = [axes]
         # ImageProxy expects Fortran-numbered axes.
         # So reverse the axes.

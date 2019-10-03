@@ -1,5 +1,4 @@
-nose
-unittest2
+pytest
 coverage
 coveralls
 travis-sphinx
