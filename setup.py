@@ -53,6 +53,9 @@ def find_library_file(libname):
                               '/usr/lib',
                               '/usr/lib/x86_64-linux-gnu']
 
+    if 'LD_LIBRARY_PATH' in os.environ:
+        lib_dirs += os.environ['LD_LIBRARY_PATH'].split(':')
+
     compiler = ccompiler.new_compiler()
     return compiler.find_library_file(lib_dirs, libname)
 
@@ -68,11 +71,9 @@ def find_boost():
                      'boost_python' + short_version,
                      'boost_python',
                      ]
-
-    if sys.version_info[0] == 2:
-        boostlibnames += ["boost_python-mt"]
-    else:
-        boostlibnames += ["boost_python3-mt"]
+    # The -mt (multithread) extension is used on macOS but not Linux.
+    # Look for it first to avoid ending up with a single-threaded version.
+    boostlibnames = [name + '-mt' for name in boostlibnames] + boostlibnames
     for libboostname in boostlibnames:
         if find_library_file(libboostname):
             return libboostname
@@ -155,7 +156,13 @@ def get_extensions():
             ["src/pytable.cc", "src/pytableindex.cc", "src/pytableiter.cc",
              "src/pytablerow.cc", "src/tables.cc", "src/pyms.cc"],
             ["src/tables.h"],
-            ['casa_tables', 'casa_ms', boost_python, casa_python],
+            ['casa_derivedmscal', 'casa_meas', 'casa_ms', 'casa_tables', boost_python, casa_python],
+        ),
+        (
+            "casacore._tConvert",
+            ["tests/tConvert.cc"],
+            [],
+            [boost_python, casa_python],
         )
     )
 
@@ -170,8 +177,10 @@ def get_extensions():
                 if found_lib:
                     depends = depends + [found_lib]
 
-        extensions.append(Extension(name=name, sources=sources, depends=depends,
-                                    libraries=libraries))
+        extensions.append(Extension(name=name, sources=sources,
+                                    depends=depends, libraries=libraries,
+                                    # Since casacore 3.0.0 we have to be C++11
+                                    extra_compile_args=['-std=c++11']))
     return extensions
 
 
@@ -185,7 +194,7 @@ os.environ['OPT'] = " ".join(
 setup(name='python-casacore',
       version=__version__,
       description='A wrapper around CASACORE, the radio astronomy library',
-      install_requires=['numpy', 'argparse'],
+      install_requires=['numpy', 'argparse', 'future', 'six'],
       author='Gijs Molenaar',
       author_email='gijs@pythonic.nl',
       url='https://github.com/casacore/python-casacore',
