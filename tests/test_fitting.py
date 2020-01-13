@@ -1,4 +1,4 @@
-import unittest2 as unittest
+import unittest
 from casacore import fitting, functionals
 import numpy as np
 
@@ -79,7 +79,7 @@ class TestFitting(unittest.TestCase):
         self.fitserver.linear(f, xz, yz)
         self.fitserver.addconstraint(x=[1, 1, 1], y=180)
         self.fitserver.linear(f, xz, yz)
-        self.assertEqual(sum(self.fitserver.solution()), 180.0)
+        self.assertAlmostEqual(sum(self.fitserver.solution()), 180.0)
         self.fitserver.clearconstraints()
 
     def test_fitspoly(self):
