@@ -50,6 +50,7 @@ def find_library_file(libname):
     # Append default search path (not a complete list)
     lib_dirs = user_lib_dirs + [os.path.join(sys.prefix, 'lib'),
                               '/usr/local/lib',
+                              '/usr/lib64',
                               '/usr/lib',
                               '/usr/lib/x86_64-linux-gnu']
 
@@ -200,6 +201,7 @@ setup(name='python-casacore',
       url='https://github.com/casacore/python-casacore',
       keywords=['pyrap', 'casacore', 'utilities', 'astronomy'],
       long_description=read('README.rst'),
+      long_description_content_type='text/x-rst',
       packages=find_packages(),
       ext_modules=get_extensions(),
       license='GPL')
