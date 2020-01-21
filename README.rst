@@ -16,6 +16,15 @@ The python-casacore documentation can be found on `casacore.github.io/python-cas
 Installation
 ============
 
+Binary wheels
+-------------
+
+We distribute binary manylinux2010 for Linux, which requires pip > 10.x. To
+install python-casacore from a binary wheel run::
+
+    $ pip install python-casacore
+
+
 Debian & Ubuntu
 ---------------
 
@@ -43,7 +52,7 @@ from source
 install these requirements:
 
 * `setuptools <https://pypi.python.org/pypi/setuptools>`_
-* `Casacore <https://github.com/casacore/casacore/>`_ 
+* `Casacore <https://github.com/casacore/casacore/>`__
 * `Boost-python <http://www.boost.org/libs/python/doc/>`_
 * `numpy <http://www.numpy.org/>`_ 
 * `cfitsio <http://heasarc.gsfc.nasa.gov/fitsio/>`_
@@ -55,7 +64,7 @@ On ubuntu you can install these with::
 
 * compile and install::
 
-    $ pip install python-casacore
+    $ pip install --no-binary python-casacore python-casacore
 
 * or if you are installing from the source repository::
 
