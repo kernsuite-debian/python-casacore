@@ -1,3 +1,10 @@
+python-casacore (3.3.0-1kern1) bionic; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * New upstream version 3.3.0
+
+ -- athanaseus <athanaseus@athanaseus-E5550>  Wed, 22 Apr 2020 19:35:35 +0200
+
 python-casacore (3.2.0-1kern1) bionic; urgency=medium
 
   [ Athanaseus Javas Ramaila ]
