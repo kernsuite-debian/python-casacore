@@ -7,10 +7,12 @@ import sys
 import warnings
 from setuptools import setup, Extension, find_packages
 from distutils.sysconfig import get_config_vars
+from distutils.command import build_ext as build_ext_module
 from distutils import ccompiler
 from distutils.version import LooseVersion
 import argparse
 import ctypes
+from os.path import join, dirname
 
 from casacore import __version__, __mincasacoreversion__
 
@@ -46,43 +48,63 @@ def find_library_file(libname):
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("--library-dirs", "-L", default='')
     args, unknown = parser.parse_known_args()
-    user_lib_dirs = args.library_dirs.split(':')
-    # Append default search path (not a complete list)
-    lib_dirs = user_lib_dirs + [os.path.join(sys.prefix, 'lib'),
-                              '/usr/local/lib',
-                              '/usr/lib64',
-                              '/usr/lib',
-                              '/usr/lib/x86_64-linux-gnu']
+    lib_dirs = args.library_dirs.split(':')
 
     if 'LD_LIBRARY_PATH' in os.environ:
         lib_dirs += os.environ['LD_LIBRARY_PATH'].split(':')
+
+    # Append default search path (not a complete list)
+    lib_dirs += [join(sys.prefix, 'lib'),
+                 '/usr/local/lib',
+                 '/usr/lib64',
+                 '/usr/lib',
+                 '/usr/lib/x86_64-linux-gnu']
 
     compiler = ccompiler.new_compiler()
     return compiler.find_library_file(lib_dirs, libname)
 
 
 def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    return open(join(dirname(__file__), fname)).read()
 
 
 def find_boost():
-    """Find the name of the boost-python library. Returns None if none is found."""
+    """
+    Find the name and path of boost-python
+
+    Returns:
+        library_name, e.g. 'boost_python-py36'        (a guess if boost is not found)
+        library_dir,  e.g. '/opt/local/boost/lib'     ('' if boost is not found)
+        include_dir,  e.g. '/opt/local/boost/include' ('' if boost is not found)
+    """
     short_version = "{}{}".format(sys.version_info[0], sys.version_info[1])
+    major_version = str(sys.version_info[0])
+
+    # Prefer libraries with python version in their name over unversioned variants
     boostlibnames = ['boost_python-py' + short_version,
                      'boost_python' + short_version,
+                     'boost_python' + major_version,
                      'boost_python',
                      ]
     # The -mt (multithread) extension is used on macOS but not Linux.
     # Look for it first to avoid ending up with a single-threaded version.
-    boostlibnames = [name + '-mt' for name in boostlibnames] + boostlibnames
+    boostlibnames = sum([[name + '-mt', name] for name in boostlibnames], [])
+
     for libboostname in boostlibnames:
-        if find_library_file(libboostname):
-            return libboostname
+        found_lib = find_library_file(libboostname)
+        if found_lib:
+            libdir = dirname(found_lib)
+            includedir = join(dirname(libdir), "include")
+            return libboostname, libdir, includedir
+
     warnings.warn(no_boost_error)
-    return boostlibnames[0]
+    return boostlibnames[0], '', ''
 
 
-def find_casacore():
+def find_casacore_version():
+    """
+    Find the version of casacore, or None if it's not found
+    """
     if sys.version_info[0] == 2:
         casa_python = 'casa_python'
     else:
@@ -91,29 +113,52 @@ def find_casacore():
     # Find casacore libpath
     libcasacasa = find_library_file('casa_casa')
 
+    casacoreversion = None
     if libcasacasa:
         # Get version number from casacore
         try:
             libcasa = ctypes.cdll.LoadLibrary(libcasacasa)
             getCasacoreVersion = libcasa.getVersion
             getCasacoreVersion.restype = ctypes.c_char_p
-            casacoreversion = getCasacoreVersion()
+            casacoreversion = getCasacoreVersion().decode('utf-8')
         except:
             # getVersion was fixed in casacore 2.3.0
-            warnings.warn("Your casacore version is older than 2.3.0! You need to upgrade your casacore.")
-        else:
-            if LooseVersion(casacoreversion.decode()) < LooseVersion(__mincasacoreversion__):
-                warnings.warn("Your casacore version is too old. Minimum is " + __mincasacoreversion__)
+            pass
 
-    if not find_library_file(casa_python):
+    return casacoreversion
+
+
+def find_casacore():
+    """
+    Find the name and path of casacore
+
+    Returns:
+        library_name, e.g. 'casa_python3'
+        library_dir,  e.g. '/opt/local/casacore/lib'     ('' if casacore is not found)
+        include_dir,  e.g. '/opt/local/casacore/include' ('' if casacore is not found)
+    """
+    if sys.version_info[0] == 2:
+        casa_python = 'casa_python'
+    else:
+        casa_python = 'casa_python3'
+
+    # Find casacore libpath
+    libcasacasa = find_library_file('casa_casa')
+
+    libdir = ''
+    includedir = ''
+    if libcasacasa:
+        libdir = dirname(libcasacasa)
+        includedir = join(dirname(libdir), "include")
+    else:
         warnings.warn(no_casacore_error)
-    return casa_python
+
+    return casa_python, libdir, includedir
 
 
 def get_extensions():
-
-    boost_python = find_boost()
-    casa_python = find_casacore()
+    boost_python_libname, boost_python_libdir, boost_python_includedir = find_boost()
+    casa_python_libname, casa_libdir, casa_includedir = find_casacore()
 
     extension_metas = (
         # name, sources, depends, libraries
@@ -121,13 +166,13 @@ def get_extensions():
             "casacore.fitting._fitting",
             ["src/fit.cc", "src/fitting.cc"],
             ["src/fitting.h"],
-            ['casa_scimath', 'casa_scimath_f', boost_python, casa_python],
+            ['casa_scimath', 'casa_scimath_f', boost_python_libname, casa_python_libname],
         ),
         (
             "casacore.functionals._functionals",
             ["src/functional.cc", "src/functionals.cc"],
             ["src/functionals.h"],
-            ['casa_scimath', 'casa_scimath_f', boost_python, casa_python],
+            ['casa_scimath', 'casa_scimath_f', boost_python_libname, casa_python_libname],
         ),
         (
             "casacore.images._images",
@@ -136,34 +181,34 @@ def get_extensions():
             ['casa_images', 'casa_coordinates',
              'casa_fits', 'casa_lattices', 'casa_measures',
              'casa_scimath', 'casa_scimath_f', 'casa_tables', 'casa_mirlib',
-             boost_python, casa_python]
+             boost_python_libname, casa_python_libname]
         ),
         (
             "casacore.measures._measures",
             ["src/pymeas.cc", "src/pymeasures.cc"],
             ["src/pymeasures.h"],
             ['casa_measures', 'casa_scimath', 'casa_scimath_f', 'casa_tables',
-             boost_python, casa_python]
+             boost_python_libname, casa_python_libname]
         ),
         (
             "casacore.quanta._quanta",
             ["src/quanta.cc", "src/quantamath.cc", "src/quantity.cc",
              "src/quantvec.cc"],
             ["src/quanta.h"],
-            ["casa_casa", boost_python, casa_python],
+            ["casa_casa", boost_python_libname, casa_python_libname],
         ),
         (
             "casacore.tables._tables",
             ["src/pytable.cc", "src/pytableindex.cc", "src/pytableiter.cc",
              "src/pytablerow.cc", "src/tables.cc", "src/pyms.cc"],
             ["src/tables.h"],
-            ['casa_derivedmscal', 'casa_meas', 'casa_ms', 'casa_tables', boost_python, casa_python],
+            ['casa_derivedmscal', 'casa_meas', 'casa_ms', 'casa_tables', boost_python_libname, casa_python_libname],
         ),
         (
             "casacore._tConvert",
             ["tests/tConvert.cc"],
             [],
-            [boost_python, casa_python],
+            [boost_python_libname, casa_python_libname],
         )
     )
 
@@ -180,6 +225,8 @@ def get_extensions():
 
         extensions.append(Extension(name=name, sources=sources,
                                     depends=depends, libraries=libraries,
+                                    library_dirs=[boost_python_libdir, casa_libdir],
+                                    include_dirs=[boost_python_includedir, casa_includedir],
                                     # Since casacore 3.0.0 we have to be C++11
                                     extra_compile_args=['-std=c++11']))
     return extensions
@@ -191,6 +238,16 @@ os.environ['OPT'] = " ".join(
     flag for flag in opt.split() if flag != '-Wstrict-prototypes'
 )
 
+
+
+class my_build_ext(build_ext_module.build_ext):
+    def run(self):
+        casacoreversion = find_casacore_version()
+        if casacoreversion is not None and  LooseVersion(casacoreversion) < LooseVersion(__mincasacoreversion__):
+            raise RuntimeError("Your casacore version is too old. Minimum is " + __mincasacoreversion__ +
+                               ", you have " + casacoreversion)
+
+        build_ext_module.build_ext.run(self)
 
 setup(name='python-casacore',
       version=__version__,
@@ -204,4 +261,5 @@ setup(name='python-casacore',
       long_description_content_type='text/x-rst',
       packages=find_packages(),
       ext_modules=get_extensions(),
+      cmdclass={'build_ext': my_build_ext},
       license='GPL')
