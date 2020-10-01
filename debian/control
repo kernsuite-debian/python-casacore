@@ -3,43 +3,22 @@ Section: python
 Priority: optional
 Maintainer: Debian Astro Team <debian-astro-maintainers@lists.alioth.debian.org>
 Uploaders: Gijs Molenaar <gijs@pythonic.nl>, Ole Streicher <olebole@debian.org>
-Build-Depends: casacore-dev (>= 3.2.0),
-               debhelper (>= 9),
+Build-Depends: casacore-dev (>= 3.2~),
+               debhelper-compat (= 12),
                dh-python,
                libboost-python-dev,
                libcfitsio-dev | libcfitsio3-dev,
-               python-all (>= 2.6.6-3~),
-               python-dev,
-               python-numpy,
-               python-setuptools,
-               python-six,
                python3-all,
                python3-dev,
                python3-numpy,
                python3-setuptools,
                python3-six,
                wcslib-dev
-Standards-Version: 3.9.8
+Standards-Version: 4.5.0
 Homepage: https://github.com/casacore/python-casacore
 Vcs-Git: https://anonscm.debian.org/git/debian-astro/packages/python-casacore.git
 Vcs-Browser: https://anonscm.debian.org/cgit/debian-astro/packages/python-casacore.git
-X-Python-Version: >= 2.6
 X-Python3-Version: >= 3.4
-
-Package: python-casacore
-Architecture: any
-Provides: ${python:Provides}
-Depends: python-numpy,
-         python-six,
-         ${misc:Depends},
-         ${python:Depends},
-         ${shlibs:Depends}
-Description: Python 2 bindings to the casacore library
- The casacore package contains the core libraries of the old AIPS++/CASA
- package. This split was made to get a better separation of core
- libraries and applications. CASA is now built on top of casacore.
- .
- This is the Python 2 wrapper around the library.
 
 Package: python3-casacore
 Architecture: any
