@@ -1,3 +1,10 @@
+python-casacore (3.4.0-1kern1) focal; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * New upstream version 3.4.0
+
+ -- KERN packaging <packaging@kernsuite.info>  Tue, 09 Mar 2021 07:33:03 +0000
+
 python-casacore (3.3.1-1kern2) focal; urgency=medium
 
   [ Athanaseus Javas Ramaila ]
