@@ -1,3 +1,24 @@
+# 3.5.1
+
+The binary wheel for python 3.10 is now based on numpy 1.22.4. Otherwise nothing has changed.
+
+
+# 3.5.0
+
+This version as a binary wheel ships with underlying casacore v3.5.0
+
+Binary wheels are now `manylinux2014` which will only work with pip >= 19.3
+
+The license has changed to LGPL.
+
+
+# 3.4.0
+
+This version as a binary wheel ships with underlying casacore v3.4.0
+
+There are no changes to python-casacore itself
+
+
 # 3.3.0
 
 This version as a binary wheel ships with underlying casacore v3.3.0.

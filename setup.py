@@ -223,10 +223,15 @@ def get_extensions():
                 if found_lib:
                     depends = depends + [found_lib]
 
+        library_dirs = [lib for lib in (boost_python_libdir, 
+                                        casa_libdir) if lib]
+        include_dirs = [inc for inc in (boost_python_includedir,
+                                        casa_includedir) if inc]
+
         extensions.append(Extension(name=name, sources=sources,
                                     depends=depends, libraries=libraries,
-                                    library_dirs=[boost_python_libdir, casa_libdir],
-                                    include_dirs=[boost_python_includedir, casa_includedir],
+                                    library_dirs=library_dirs,
+                                    include_dirs=include_dirs,
                                     # Since casacore 3.0.0 we have to be C++11
                                     extra_compile_args=['-std=c++11']))
     return extensions
@@ -255,7 +260,7 @@ class my_build_ext(build_ext_module.build_ext):
 setup(name='python-casacore',
       version=__version__,
       description='A wrapper around CASACORE, the radio astronomy library',
-      install_requires=['numpy', 'argparse', 'future', 'six'],
+      install_requires=['numpy', 'six'],
       author='Gijs Molenaar',
       author_email='gijs@pythonic.nl',
       url='https://github.com/casacore/python-casacore',
@@ -265,4 +270,4 @@ setup(name='python-casacore',
       packages=find_packages(),
       ext_modules=get_extensions(),
       cmdclass={'build_ext': my_build_ext},
-      license='GPL')
+      license='LGPL')
