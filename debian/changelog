@@ -1,9 +1,17 @@
+python-casacore (3.5.2-1kern1) jammy; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * New upstream version 3.5.2
+  * Build for jammy
+
+ -- KERN packaging <packaging@kernsuite.info>  Sat, 20 Jan 2024 08:59:58 +0000
+
 python-casacore (3.5.1-1kern1) focal; urgency=medium
 
   [ Athanaseus Javas Ramaila ]
   * New upstream version 3.5.1
 
- --  <athanaseus@upload.kernsuite.info>  Sun, 18 Sep 2022 10:36:14 +0000
+ -- KERN packaging <packaging@kernsuite.info>  Sun, 18 Sep 2022 10:36:14 +0000
 
 python-casacore (3.4.0-1kern1) focal; urgency=medium
 
