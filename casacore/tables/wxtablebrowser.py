@@ -1,7 +1,7 @@
+#!/usr/bin/env python
+
 from wxPython.grid import *
 from wxPython.wx import *
-
-import six
 
 
 class wxCasaTable(wxPyGridTableBase):
@@ -73,7 +73,7 @@ class wxCasaTableGrid(wxGrid):
         EVT_GRID_CELL_RIGHT_CLICK(self, self.OnRightDown)  # added
 
     def OnRightDown(self, event):  # added
-        six.print_(self.GetSelectedRows())  # added
+        print(self.GetSelectedRows())  # added
 
 
 # ---------------------------------------------------------------------------

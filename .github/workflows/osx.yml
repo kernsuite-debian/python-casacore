@@ -9,12 +9,15 @@ on:
 
 jobs:
   osx:
-    runs-on: macos-10.15
+    runs-on: macos-11
     continue-on-error: true
 
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          # Needed for `setuptools-scm`
+          fetch-depth: 0
 
       - name: install homebrew packages
         run: |
@@ -34,12 +37,12 @@ jobs:
         run: venv/bin/pytest
 
       - name: make binary wheel
-        run: venv/bin/python3 setup.py bdist_wheel
+        run: venv/bin/pip wheel -w dist .
 
       - name: Delocate binary wheel
         run: venv/bin/delocate-wheel -v dist/*.whl
 
       - name: Publish OS X binary wheels
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           path: dist/*.whl

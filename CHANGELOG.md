@@ -1,3 +1,14 @@
+# 3.7.1
+
+This version as a binary wheel ships with underlying casacore v3.7.1.
+
+# 3.6.1
+
+This version as a binary wheel ships with underlying casacore v3.6.1.
+
+The build system has seen a major upgrade.
+
+
 # 3.5.2
 
 The binary wheels have now been built with `-DPORTABLE=True`. This should fix issues with Dysco crashing on some platforms (due to missing AVX instructions). Otherwise nothing has changed.

@@ -23,13 +23,10 @@
 #                        520 Edgemont Road
 #                        Charlottesville, VA 22903-2475 USA
 
-
-from six import string_types, integer_types
 from ._images import Image
 import numpy
 import numpy.ma as nma
 from casacore.images.coordinates import coordinatesystem
-import six
 
 
 class image(Image):
@@ -128,7 +125,7 @@ class image(Image):
             if isinstance(imagename, tuple) or isinstance(imagename, list):
                 if len(imagename) == 0:
                     raise ValueError('No images given in list or tuple')
-                if isinstance(imagename[0], string_types):
+                if isinstance(imagename[0], str):
                     # Concatenate from image names
                     Image.__init__(self, imagename, axis)
                     opened = True
@@ -137,7 +134,7 @@ class image(Image):
                     Image.__init__(self, imagename, axis, 0, 0)
                     opened = True
             if not opened:
-                if not isinstance(imagename, string_types):
+                if not isinstance(imagename, str):
                     raise ValueError("first argument must be name or" +
                                      " sequence of images or names")
                 if shape is None:
@@ -154,7 +151,7 @@ class image(Image):
                                                       [(image, '', imgs)],
                                                       locals=cu.getlocals(3))
                         except:
-                            six.print_("Probably could not import casacore.util")
+                            print("Probably could not import casacore.util")
                             pass
                         Image.__init__(self, imagename, maskname, imgs)
                     else:
@@ -259,7 +256,7 @@ class image(Image):
         It can only be used for unique attribute keys. An IndexError exception
         is raised if no or multiple matches are found.
         """
-        if not isinstance(key, string_types):
+        if not isinstance(key, str):
             return self._attrgetrow(groupname, key)
         # The key is an attribute name whose value has to be found.
         rownrs = self.attrfindrows(groupname, key, value)
@@ -592,25 +589,25 @@ class image(Image):
         # Test if casaviewer can be found.
         # On OS-X 'which' always returns 0, so use test on top of it.
         if os.system('test -x `which casaviewer` > /dev/null 2>&1') == 0:
-            six.print_("Starting casaviewer in the background ...")
+            print("Starting casaviewer in the background ...")
             self.unlock()
             if self.ispersistent():
                 os.system('casaviewer ' + self.name() + ' &')
             elif len(tempname) > 0:
-                six.print_("  making a persistent copy in " + tempname)
-                six.print_("  which should be deleted after the viewer has ended")
+                print("  making a persistent copy in " + tempname)
+                print("  which should be deleted after the viewer has ended")
                 self.saveas(tempname)
                 os.system('casaviewer ' + tempname + ' &')
             else:
-                six.print_("Cannot view because the image is in memory only.")
-                six.print_("You can browse a persistent copy of the image like:")
-                six.print_("   t.view('/tmp/tempimage')")
+                print("Cannot view because the image is in memory only.")
+                print("You can browse a persistent copy of the image like:")
+                print("   t.view('/tmp/tempimage')")
         else:
-            six.print_("casaviewer cannot be found")
+            print("casaviewer cannot be found")
 
     def _adaptAxes(self, axes):
         # If axes is a single integer value, turn it into a list.
-        if isinstance(axes, integer_types):
+        if isinstance(axes, int):
             axes = [axes]
         # ImageProxy expects Fortran-numbered axes.
         # So reverse the axes.
