@@ -1,3 +1,11 @@
+python-casacore (3.7.1-1kern1) noble; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * New upstream version 3.7.1
+  * Build for noble
+
+ -- KERN packaging <packaging@kernsuite.info>  Thu, 28 Aug 2025 07:48:30 +0000
+
 python-casacore (3.5.2-1kern1) jammy; urgency=medium
 
   [ Athanaseus Javas Ramaila ]

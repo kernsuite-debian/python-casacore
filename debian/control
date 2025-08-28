@@ -3,22 +3,30 @@ Section: python
 Priority: optional
 Maintainer: Debian Astro Team <debian-astro-maintainers@lists.alioth.debian.org>
 Uploaders: Gijs Molenaar <gijs@pythonic.nl>, Ole Streicher <olebole@debian.org>
-Build-Depends: casacore-dev (>= 3.2~),
-               debhelper-compat (= 12),
+Build-Depends: casacore-dev,
+               cmake (>= 3.15),
+               debhelper-compat (= 13),
                dh-python,
+               libblas-dev,
                libboost-python-dev,
                libcfitsio-dev | libcfitsio3-dev,
-               python3-all,
+               liblapack-dev,
+               pybuild-plugin-pyproject,
+               python3-all (>= 3.10),
                python3-dev,
                python3-numpy,
+               python3-pathspec,
+               python3-pyproject-metadata,
+               python3-scikit-build-core,
                python3-setuptools,
+               python3-setuptools-scm,
                python3-six,
                wcslib-dev
-Standards-Version: 4.6.2.0
+Standards-Version: 4.7.2.0
 Homepage: https://github.com/casacore/python-casacore
 Vcs-Git: https://anonscm.debian.org/git/debian-astro/packages/python-casacore.git
 Vcs-Browser: https://anonscm.debian.org/cgit/debian-astro/packages/python-casacore.git
-X-Python3-Version: >= 3.8
+X-Python3-Version: >= 3.10
 
 Package: python3-casacore
 Architecture: any
