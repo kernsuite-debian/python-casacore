@@ -1,0 +1,15 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 33810ea..475afa0 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -98,8 +98,8 @@ manylinux-x86_64-image = "quay.io/casacore/casacore:py313_v3.7.1"
+ #########################
+ 
+ [tool.scikit-build]
+-cmake.version = ">=3.15"
+-ninja.version = ">=1.5"
++cmake.minimum-version = "3.15"
++ninja.minimum-version = "1.5"
+ logging.level = "INFO"
+ install.components = ["data", "libraries"]
+ metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
