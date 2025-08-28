@@ -1,8 +1,6 @@
 from ._fitting import fitting
 import numpy as NUM
-import six
 from casacore.functionals import *
-from six import string_types
 
 
 class fitserver(object):
@@ -100,13 +98,13 @@ class fitserver(object):
             return False
 
     def _gettype(self, ftype):
-        if isinstance(ftype, string_types):
+        if isinstance(ftype, str):
             ftype = ftype.lower()
             if ftype not in self._typeids:
                 raise TypeError("Illegal fitting type")
             else:
                 return self._typeids[ftype]
-        elif isinstance(ftype, six.integer_types):
+        elif isinstance(ftype, int):
             if ftype not in self._typeids.values():
                 raise TypeError("Illegal fitting type")
         else:
@@ -231,7 +229,7 @@ class fitserver(object):
                 functional("hyper", len(x)).todict()
         self._fitids[fid]["constraint"][i]["x"] = [float(v) for v in x]
         self._fitids[fid]["constraint"][i]["y"] = float(y)
-        six.print_(self._fitids[fid]["constraint"])
+        print(self._fitids[fid]["constraint"])
 
     def fitpoly(self, n, x, y, sd=None, wt=1.0, fid=0):
         if self.set(n=n + 1, fid=fid):

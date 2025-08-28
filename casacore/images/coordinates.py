@@ -25,8 +25,6 @@
 #
 # $Id$
 
-import six
-
 
 class coordinatesystem(object):
     """
@@ -66,7 +64,7 @@ class coordinatesystem(object):
         return self._csys
 
     def summary(self):
-        six.print_(str(self))
+        print(str(self))
 
     def _get_coordinatenames(self):
         """Create ordered list of coordinate names

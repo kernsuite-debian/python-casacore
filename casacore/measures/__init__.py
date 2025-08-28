@@ -31,6 +31,7 @@ from ._measures import measures as _measures
 import casacore.quanta as dq
 import os
 
+
 if 'MEASURESDATA' in os.environ.keys():
     if 'AIPSPATH' not in os.environ.keys():
         os.environ['AIPSPATH'] = '%s dummy dummy' % os.environ['MEASURESDATA']
@@ -434,7 +435,7 @@ class measures(_measures):
         """
         if is_measure(rfq) and rfq['type'] == 'frequency':
             rfq = dq.quantity(rfq['m0'])
-        elif isinstance(rfq, string_types):
+        elif isinstance(rfq, str):
             rfq = dq.quantity(rfq)
         if is_measure(v0) and v0['type'] == 'doppler' \
                 and dq.is_quantity(rfq) \
@@ -486,7 +487,7 @@ class measures(_measures):
         """
         if is_measure(rfq) and rfq['type'] == 'frequency':
             rfq = dq.quantity(rfq['m0'])
-        elif isinstance(rfq, string_types):
+        elif isinstance(rfq, str):
             rfq = dq.quantity(rfq)
         if is_measure(v0):
             if v0['type'] == 'radialvelocity':
@@ -624,7 +625,7 @@ class measures(_measures):
         if not is_measure(v):
             raise TypeError('Incorrect input type for getvalue()')
         import re
-        rx = re.compile("m\d+")
+        rx = re.compile(r"m\d+")
         out = []
         keys = list(v.keys())
         keys.sort()
@@ -821,7 +822,7 @@ class measures(_measures):
         """
 
         a = self.rise(crd, ev)
-        if isinstance(a['rise'], string_types):
+        if isinstance(a['rise'], str):
             return {"rise": {"last": a[0], "utc": a[0]},
                     "set": {"last": a[1], "utc": a[1]},
                     "solved": False}
