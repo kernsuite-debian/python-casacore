@@ -1,3 +1,10 @@
+python-casacore (3.7.1-1kern2) noble; urgency=medium
+
+  [ Athanaseus Javas Ramaila ]
+  * Rebuild version 3.7.1
+
+ -- KERN packaging <packaging@kernsuite.info>  Sat, 30 Aug 2025 20:08:00 +0000
+
 python-casacore (3.7.1-1kern1) noble; urgency=medium
 
   [ Athanaseus Javas Ramaila ]
